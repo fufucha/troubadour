@@ -5,7 +5,7 @@
   "Description": "Customize and manage in-game BGM presets.",
   "ApplicableVersion": "any",
   "RepoUrl": "https://github.com/fufucha/troubadour",
-  "IconUrl": "https://raw.githubusercontent.com/fufucha/troubadour/Data/assets/icon.png",
+  "IconUrl": "https://raw.githubusercontent.com/fufucha/troubadour/main/Data/assets/icon.png",
   "Tags": [
     "ost",
     "scd",
