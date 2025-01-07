@@ -38,8 +38,12 @@ jobs:
         run: |
           dotnet build --no-restore --configuration Release --nologo
 
-      - name: Upload a Build Artifact
+      - name: Create latest.zip
+        run: |
+          Compress-Archive -Path ./Troubadour/bin/Release/* -DestinationPath latest.zip
+
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          path: |
-            ./Troubadour/bin/Release/*
+          name: latest-zip
+          path: latest.zip

@@ -16,8 +16,7 @@ public class Main : TabBase
     private string searchQuery;
     private bool showCheckedOnly;
 
-    public Main(Plugin plugin, Configuration config, UIService ui, uint[] icons, string[] categories)
-    : base(plugin, config)
+    public Main(Plugin plugin, Configuration config, UIService ui, uint[] icons, string[] categories) : base(plugin, config)
     {
         this.ui = ui;
         this.icons = icons;
