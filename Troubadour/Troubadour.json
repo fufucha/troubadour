@@ -1,0 +1,17 @@
+{
+  "Author": "fufucha",
+  "Name": "Troubadour",
+  "Punchline": "Replace in-game BGM tracks with ease.",
+  "Description": "Customize and manage in-game BGM presets.",
+  "ApplicableVersion": "any",
+  "RepoUrl": "https://github.com/fufucha/troubadour",
+  "IconUrl": "https://raw.githubusercontent.com/fufucha/troubadour/Data/assets/icon.png",
+  "Tags": [
+    "ost",
+    "scd",
+    "bgm",
+    "music",
+    "presets",
+    "troubadour"
+  ]
+}
