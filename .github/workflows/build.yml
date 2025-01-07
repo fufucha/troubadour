@@ -40,7 +40,7 @@ jobs:
 
       - name: Create latest.zip
         run: |
-          Compress-Archive -Path ./Troubadour/bin/Release/* -DestinationPath latest.zip
+          Compress-Archive -Path ./Troubadour/bin/Release/* -DestinationPath latest.zip -Force
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
