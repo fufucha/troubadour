@@ -44,9 +44,14 @@ jobs:
             Remove-Item -Path latest.zip -Force
           }
 
+      - name: Prepare files for packaging
+        run: |
+          mkdir build
+          Copy-Item -Path ./Troubadour/bin/Release/* -Destination ./build -Recurse
+
       - name: Create latest.zip
         run: |
-          Compress-Archive -Path ./Troubadour/bin/Release/* -DestinationPath latest.zip
+          Compress-Archive -Path ./build/* -DestinationPath latest.zip -Force
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
