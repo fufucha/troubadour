@@ -38,30 +38,22 @@ jobs:
         run: |
           dotnet build --no-restore --configuration Release --nologo
 
-      - name: Remove existing latest.zip if present
+      - name: Use generated latest.zip
         run: |
-          if (Test-Path -Path latest.zip) {
-            Remove-Item -Path latest.zip -Force
+          if (!(Test-Path -Path ./Troubadour/bin/Release/Troubadour/latest.zip)) {
+            throw "latest.zip not found in Release output"
           }
-
-      - name: Prepare files for packaging
-        run: |
-          mkdir build
-          Copy-Item -Path ./Troubadour/bin/Release/* -Destination ./build -Recurse
-
-      - name: Create latest.zip
-        run: |
-          Compress-Archive -Path ./build/* -DestinationPath latest.zip -Force
+        shell: pwsh
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: latest-zip
-          path: latest.zip
+          path: ./Troubadour/bin/Release/Troubadour/latest.zip
 
       - name: Release Build
         uses: softprops/action-gh-release@v1
         with:
-          files: latest.zip
+          files: ./Troubadour/bin/Release/Troubadour/latest.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
