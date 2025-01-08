@@ -38,9 +38,15 @@ jobs:
         run: |
           dotnet build --no-restore --configuration Release --nologo
 
+      - name: Remove existing latest.zip if present
+        run: |
+          if (Test-Path -Path latest.zip) {
+            Remove-Item -Path latest.zip -Force
+          }
+
       - name: Create latest.zip
         run: |
-          Compress-Archive -Path ./Troubadour/bin/Release/* -DestinationPath latest.zip -Force
+          Compress-Archive -Path ./Troubadour/bin/Release/* -DestinationPath latest.zip
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
