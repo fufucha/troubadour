@@ -53,3 +53,10 @@ jobs:
         with:
           name: latest-zip
           path: latest.zip
+
+      - name: Release Build
+        uses: softprops/action-gh-release@v1
+        with:
+          files: latest.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
