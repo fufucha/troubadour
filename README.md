@@ -1,4 +1,4 @@
-[![Download Count](https://img.shields.io/github/downloads/fufucha/troubadour/total.svg)](https://github.com/fufucha/troubadour/releases) [![Build Status](https://img.shields.io/github/actions/workflow/status/fufucha/troubadour/build.yml?branch=main)](https://github.com/fufucha/troubadour/actions) [![Latest Release](https://img.shields.io/github/v/release/fufucha/troubadour)](https://github.com/fufucha/troubadour/releases/latest)  
+[![Download Count](https://img.shields.io/github/downloads/fufucha/troubadour/total.svg)](https://github.com/fufucha/troubadour/releases) [![Build Status](https://img.shields.io/github/actions/workflow/status/fufucha/troubadour/.github/workflows/build.yml)](https://github.com/fufucha/troubadour/actions) [![Latest Release](https://img.shields.io/github/v/release/fufucha/troubadour)](https://github.com/fufucha/troubadour/releases/latest)
 
 # Troubadour - BGM Preset Manager
 
