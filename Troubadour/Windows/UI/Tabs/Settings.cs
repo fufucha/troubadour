@@ -4,7 +4,6 @@ using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Colors;
 using ImGuiNET;
-using Lumina.Excel.Sheets;
 using Troubadour.BGM;
 using Troubadour.Services;
 
@@ -144,12 +143,23 @@ public class Settings : TabBase
             }
             else
             {
+                ImGui.PushStyleColor(ImGuiCol.Button, ImGuiColors.DPSRed);
                 if (ImGui.Button($"Delete Preset##{preset.Name}"))
                 {
-                    Plugin.PresetManager.DeletePreset(preset);
-                    searches.Remove(preset.Name);
-                    return;
+                    if (ImGui.GetIO().KeyCtrl)
+                    {
+                        Plugin.PresetManager.DeletePreset(preset);
+                        searches.Remove(preset.Name);
+                        ImGui.PopStyleColor();
+                        return;
+                    }
                 }
+
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.SetTooltip("Hold CTRL and click to delete this preset.");
+                }
+                ImGui.PopStyleColor();
             }
 
             ImGui.SameLine();
