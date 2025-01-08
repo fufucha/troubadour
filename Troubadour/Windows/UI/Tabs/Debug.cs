@@ -12,35 +12,31 @@ public class Debug : TabBase
     /// </summary>
     public override void Draw()
     {
-        if (ImGui.BeginTabItem("Debug"))
+        bool debugChatLogs = Config.Debug;
+        if (ImGui.Checkbox("Display chat logs", ref debugChatLogs))
         {
-            bool debugChatLogs = Config.Debug;
-            if (ImGui.Checkbox("Display chat logs", ref debugChatLogs))
-            {
-                Config.Debug = debugChatLogs;
-                Config.Save();
-            }
-
-            ImGui.Separator();
-            if (ImGui.Button("Play Debug BGM"))
-            {
-                Plugin.PlayBackgroundMusic(671);
-            }
-
-            ImGui.SameLine();
-            if (ImGui.Button("Stop Debug BGM"))
-            {
-                Plugin.StopBackgroundMusic();
-            }
-
-            ImGui.Separator();
-            if (ImGui.Button("Log All Scenes"))
-            {
-                PrintScenes();
-            }
-
-            ImGui.EndTabItem();
+            Config.Debug = debugChatLogs;
+            Config.Save();
         }
+
+        ImGui.Separator();
+        if (ImGui.Button("Play Debug BGM"))
+        {
+            Plugin.PlayBackgroundMusic(671);
+        }
+
+        ImGui.SameLine();
+        if (ImGui.Button("Stop Debug BGM"))
+        {
+            Plugin.StopBackgroundMusic();
+        }
+
+        ImGui.Separator();
+        if (ImGui.Button("Log All Scenes"))
+        {
+            PrintScenes();
+        }
+
     }
 
     /// <summary>

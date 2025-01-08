@@ -23,6 +23,16 @@ public class MainWindow : Window, IDisposable
         "Dawntrail"
     };
 
+    public enum Tab
+    {
+        None,
+        Main,
+        Settings,
+        Debug
+    }
+    public Tab ActiveTab { get; set; } = Tab.None;
+    public Plugin Plugin { get; }
+
     private readonly Main mainTab;
     private readonly Settings settingsTab;
     private readonly Debug debugTab;
@@ -52,13 +62,38 @@ public class MainWindow : Window, IDisposable
         ImGui.SetNextWindowSize(new Vector2(800, 600), ImGuiCond.FirstUseEver);
         ImGui.SetNextWindowSizeConstraints(new Vector2(800, 600), new Vector2(float.MaxValue, float.MaxValue));
 
-        ImGui.Begin("Troubadour", ref isOpen, ImGuiWindowFlags.None);
+        if (!ImGui.Begin("Troubadour", ref isOpen, ImGuiWindowFlags.None))
+        {
+            ImGui.End();
+            return;
+        }
 
+        bool tabOpen = true;
         if (ImGui.BeginTabBar("Tabs"))
         {
-            mainTab.Draw();
-            settingsTab.Draw();
-            debugTab.Draw();
+            // Onglet Main
+            ImGuiTabItemFlags mainTabFlags = ActiveTab == Tab.Main ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
+            if (ImGui.BeginTabItem("Main", ref tabOpen, mainTabFlags))
+            {
+                mainTab.Draw();
+                ImGui.EndTabItem();
+            }
+
+            ImGuiTabItemFlags settingsTabFlags = ActiveTab == Tab.Settings ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
+            if (ImGui.BeginTabItem("Settings", ref tabOpen, settingsTabFlags))
+            {
+                settingsTab.Draw();
+                ImGui.EndTabItem();
+            }
+
+            ImGuiTabItemFlags debugTabFlags = ActiveTab == Tab.Debug ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
+            if (ImGui.BeginTabItem("Debug", ref tabOpen, debugTabFlags))
+            {
+                debugTab.Draw();
+                ImGui.EndTabItem();
+            }
+
+            ActiveTab = Tab.None;
             ImGui.EndTabBar();
         }
 

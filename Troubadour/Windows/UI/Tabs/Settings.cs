@@ -25,22 +25,18 @@ public class Settings : TabBase
     /// </summary>
     public override void Draw()
     {
-        if (ImGui.BeginTabItem("Settings"))
+        DrawSectionHeader("Preset Management");
+        ImGui.BeginChild("SettingsScrollArea", new Vector2(0, 0), true);
+
+        DrawGlobalPresetButtons();
+        ImGui.Separator();
+
+        foreach (var preset in Plugin.Config.Presets.ToList())
         {
-            DrawSectionHeader("Preset Management");
-            ImGui.BeginChild("SettingsScrollArea", new Vector2(0, 0), true);
-
-            DrawGlobalPresetButtons();
-            ImGui.Separator();
-
-            foreach (var preset in Plugin.Config.Presets.ToList())
-            {
-                DrawPreset(preset);
-            }
-
-            ImGui.EndChild();
-            ImGui.EndTabItem();
+            DrawPreset(preset);
         }
+
+        ImGui.EndChild();
     }
 
     /// <summary>

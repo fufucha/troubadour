@@ -32,19 +32,15 @@ public class Main : TabBase
     /// </summary>
     public override void Draw()
     {
-        if (ImGui.BeginTabItem("Main"))
-        {
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(4, 4));
-            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(4, 2));
-            ImGui.Columns(2, "MainColumns", false);
+        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(4, 4));
+        ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(4, 2));
+        ImGui.Columns(2, "MainColumns", false);
 
-            DrawIconsPanel();
-            DrawContentPanel();
+        DrawIconsPanel();
+        DrawContentPanel();
 
-            ImGui.Columns(1);
-            ImGui.PopStyleVar(2);
-            ImGui.EndTabItem();
-        }
+        ImGui.Columns(1);
+        ImGui.PopStyleVar(2);
     }
 
     /// <summary>

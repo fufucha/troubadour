@@ -50,8 +50,16 @@ public sealed class Plugin : IDalamudPlugin
 
         // register UI events
         PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
-        PluginInterface.UiBuilder.OpenConfigUi += () => mainWindow.IsOpen = true;
-        PluginInterface.UiBuilder.OpenMainUi += () => mainWindow.IsOpen = true;
+        PluginInterface.UiBuilder.OpenMainUi += () =>
+        {
+            mainWindow.IsOpen = true;
+            mainWindow.ActiveTab = MainWindow.Tab.Main;
+        };
+        PluginInterface.UiBuilder.OpenConfigUi += () =>
+        {
+            mainWindow.IsOpen = true;
+            mainWindow.ActiveTab = MainWindow.Tab.Settings;
+        };
 
         // add command handler
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
