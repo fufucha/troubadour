@@ -5,19 +5,16 @@ using System.Numerics;
 using Dalamud.Interface.Colors;
 using ImGuiNET;
 using Troubadour.BGM;
-using Troubadour.Services;
 
 namespace Troubadour.Windows.UI.Tabs;
 
 public class Settings : TabBase
 {
-    private readonly UIService ui;
     private Dictionary<string, string> searches;
 
-    public Settings(Plugin plugin, Configuration config, Dictionary<string, string> searches, UIService ui) : base(plugin, config)
+    public Settings(Plugin plugin, Configuration config) : base(plugin, config)
     {
-        this.ui = ui;
-        this.searches = searches;
+        searches = new Dictionary<string, string>();
     }
 
     /// <summary>
@@ -31,9 +28,14 @@ public class Settings : TabBase
         DrawGlobalPresetButtons();
         ImGui.Separator();
 
-        foreach (var preset in Plugin.Config.Presets.ToList())
+        var presets = Plugin.Config.Presets.ToList();
+        for (int i = 0; i < presets.Count; i++)
         {
-            DrawPreset(preset);
+            DrawPreset(presets[i]);
+            if (i < presets.Count - 1)
+            {
+                ImGui.Separator();
+            }
         }
 
         ImGui.EndChild();
@@ -135,6 +137,9 @@ public class Settings : TabBase
                 {
                     preset.ResetToDefault();
                     Plugin.Config.Save();
+
+                    // synchronize checkboxes
+                    SynchronizeBgmStates();
                 }
             }
             else
@@ -185,16 +190,15 @@ public class Settings : TabBase
         if (!filteredBgm.Any())
         {
             ImGui.Text("No results found.");
+            return;
         }
 
         // display the list of filtered BGMs
-        ImGui.BeginChild($"ReplacementList_{preset.Name}", new Vector2(0, ImGui.GetContentRegionAvail().Y / 2), true);
+        ImGui.BeginChild($"ReplacementList_{preset.Name}", new Vector2(0, 200), true);
 
         foreach (var bgm in filteredBgm)
         {
-            var bgmTitle = $"{bgm.Id} - {bgm.English}";
-
-            ImGui.Text(bgmTitle);
+            ImGui.Text($"{bgm.Id} - {bgm.English}");
 
             ImGui.SameLine();
             if (ImGui.Button($"▶##Play_{bgm.Id}_{preset.Name}"))
@@ -222,7 +226,13 @@ public class Settings : TabBase
 
         ImGui.Separator();
         ImGui.Text("Current Replacements");
-        foreach (var replacement in preset.Replacements.ToList())
+        if (!preset.Replacements.Any())
+        {
+            ImGui.Text("No replacements found.");
+            return;
+        }
+
+        foreach (var replacement in preset.Replacements)
         {
             var replacementBgm = ui.GetFilteredBgm(string.Empty, string.Empty, false)
                 .FirstOrDefault(bgm => bgm.Id == replacement);

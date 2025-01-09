@@ -15,7 +15,7 @@ Troubadour includes a default preset that you can import as a reference.
 ## Planned Features
 
 The following features are planned for future updates:
-- **Preset Cycling**: Loop through all enabled presets automatically.
+- ~~**Preset Cycling**: Loop through all enabled presets automatically.~~ [DONE]
 - **User-Imported Music**: Allow the use and sharing of custom music tracks selected by the user.
 - **SCD Format Player**: Add support for the SCD format.
 - **Orchestrion Playlist Integration**: Automatically import playlists from the the [Orchestrion plugin](https://github.com/perchbirdd/OrchestrionPlugin) when available.

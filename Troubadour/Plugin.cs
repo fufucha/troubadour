@@ -36,6 +36,9 @@ public sealed class Plugin : IDalamudPlugin
 
     public PresetManager PresetManager { get; private set; }
 
+    public List<BgmData> BgmList { get; private set; }
+    public Dictionary<ushort, bool> BgmStates { get; private set; }
+
     public Plugin()
     {
         // load configuration
@@ -43,6 +46,10 @@ public sealed class Plugin : IDalamudPlugin
 
         // initialize the Preset Manager
         PresetManager = new PresetManager(Config, this);
+
+        // initialize BGM data
+        BgmList = BgmRepository.BgmData.ToList();
+        BgmStates = new Dictionary<ushort, bool>();
 
         // initialize the main window
         mainWindow = new MainWindow(this, Config);
@@ -125,47 +132,42 @@ public sealed class Plugin : IDalamudPlugin
     }
 
     /// <summary>
-    /// Handles logic for BGM changes, including replacement based on the selected preset.
-    /// Stops the current music or replaces it with a preset-defined alternative.
+    /// Handles logic for BGM changes by iterating through all enabled presets.
+    /// If a detected BGM ID matches an entry in any enabled preset, it replaces the BGM with a randomly selected replacement from that specific preset.
+    /// If no match is found and a replacement BGM is currently playing, stops the currently playing music.
     /// </summary>
     /// <param name="detectedBgmId">The ID of the newly detected BGM.</param>
     private void OnBgmChanged(ushort detectedBgmId)
     {
-        var selectedPreset = PresetManager.SelectedPreset;
-        if (!selectedPreset.IsEnabled)
+        // iterate through all enabled presets
+        foreach (var preset in PresetManager.GetEnabledPresets())
         {
-            Print(@$"Preset ""{selectedPreset.Name}"" is disabled. No BGM changes will be applied.");
-            return;
-        }
-
-        if (selectedPreset.Replacements.Count == 0)
-        {
-            Print(@$"No replacements defined for preset ""{selectedPreset.Name}"".");
-            return;
-        }
-
-        // stop the current replacement BGM if the detected BGM is not in the preset's checked list
-        if (!selectedPreset.SelectedEntries.Contains(detectedBgmId))
-        {
-            var currentSceneBgmId = BgmManager.CurrentSceneBgmId(BgmManager.HIGHEST_PRIORITY);
-            if (currentSceneBgmId != 0)
+            // check if the detected BGM ID is in the preset's checked list
+            if (preset.SelectedEntries.Contains(detectedBgmId))
             {
-                Print(@$"BGM ID ""{detectedBgmId}"" is not in the checked list for preset ""{selectedPreset.Name}"". Revert to game.");
-                StopBackgroundMusic();
+                // select a random replacement BGM
+                var random = new Random();
+                var newBgm = preset.Replacements.ElementAt(random.Next(preset.Replacements.Count));
+
+                // attempt to set the new BGM
+                if (!BgmManager.SetBgmToScene(BgmManager.HIGHEST_PRIORITY, newBgm))
+                {
+                    PrintError(@$"Failed to set BGM ""{newBgm}"".");
+                    return;
+                }
+
+                Print(@$"Replacing BGM ""{detectedBgmId}"" with ""{newBgm}"" from preset ""{preset.Name}"".");
+                return;
             }
-            return;
         }
 
-        // select a random replacement BGM
-        var random = new Random();
-        var newBgm = selectedPreset.Replacements.ElementAt(random.Next(selectedPreset.Replacements.Count));
-        if (!BgmManager.SetBgmToScene(BgmManager.HIGHEST_PRIORITY, newBgm))
+        // if no preset has a replacement for the detected BGM ID, stop the current music
+        var currentSceneBgmId = BgmManager.CurrentSceneBgmId(BgmManager.HIGHEST_PRIORITY);
+        if (currentSceneBgmId != 0)
         {
-            PrintError(@$"Failed to set BGM ""{newBgm}"".");
-            return;
+            Print(@$"BGM ID ""{detectedBgmId}"" not found in any enabled preset. Revert to game.");
+            StopBackgroundMusic();
         }
-
-        Print(@$"Replacing BGM ""{detectedBgmId}"" with ""{newBgm}"" from preset ""{selectedPreset.Name}"".");
     }
 
     /// <summary>
@@ -216,7 +218,8 @@ public sealed class Plugin : IDalamudPlugin
         CommandManager.RemoveHandler(CommandName);
         Framework.Update -= OnFrameworkUpdate;
 
+        BgmList.Clear();
+        BgmStates.Clear();
         BgmManager?.Dispose();
-        mainWindow.Dispose();
     }
 }

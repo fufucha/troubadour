@@ -3,24 +3,28 @@ using System.Numerics;
 using Dalamud.Interface.Colors;
 using ImGuiNET;
 using Troubadour.BGM;
-using Troubadour.Services;
 
 namespace Troubadour.Windows.UI.Tabs;
 
 public class Main : TabBase
 {
-    private readonly UIService ui;
-    private readonly uint[] icons;
-    private readonly string[] categories;
+    private static readonly uint[] Icons = { 61831, 61875, 61876, 61877, 61878, 61879, 61880 };
+    private static readonly string[] Categories = {
+        "Event",
+        "A Realm Reborn",
+        "Heavensward",
+        "Stormblood",
+        "Shadowbringers",
+        "Endwalker",
+        "Dawntrail"
+    };
+
     private int selectedPanel;
     private string searchQuery;
     private bool showCheckedOnly;
 
-    public Main(Plugin plugin, Configuration config, UIService ui, uint[] icons, string[] categories) : base(plugin, config)
+    public Main(Plugin plugin, Configuration config) : base(plugin, config)
     {
-        this.ui = ui;
-        this.icons = icons;
-        this.categories = categories;
         searchQuery = string.Empty;
 
         // synchronize checkboxes
@@ -71,9 +75,9 @@ public class Main : TabBase
     /// </summary>
     private void DisplayIcons()
     {
-        for (var i = 0; i < icons.Length; i++)
+        for (var i = 0; i < Icons.Length; i++)
         {
-            var iconID = icons[i];
+            var iconID = Icons[i];
             var icon = ui.GetIcon(iconID);
             if (icon == null)
             {
@@ -102,7 +106,7 @@ public class Main : TabBase
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
-                ImGui.Text(categories[i]);
+                ImGui.Text(Categories[i]);
                 ImGui.EndTooltip();
             }
 
@@ -125,6 +129,8 @@ public class Main : TabBase
                 if (ImGui.Selectable(name, isSelected))
                 {
                     Plugin.PresetManager.SetSelectedPreset(preset);
+
+                    // synchronize checkboxes
                     SynchronizeBgmStates();
                 }
 
@@ -153,10 +159,10 @@ public class Main : TabBase
     /// </summary>
     private void DrawPanelContent()
     {
-        if (selectedPanel < categories.Length)
+        if (selectedPanel < Categories.Length)
         {
-            var category = categories[selectedPanel];
-            var filteredBgm = ui.GetFilteredBgm(searchQuery, categories[selectedPanel], showCheckedOnly);
+            var category = Categories[selectedPanel];
+            var filteredBgm = ui.GetFilteredBgm(searchQuery, Categories[selectedPanel], showCheckedOnly);
 
             ImGui.BeginChild($"Panel_{selectedPanel}_Content", new Vector2(0, 0), true);
 
@@ -214,21 +220,6 @@ public class Main : TabBase
         if (ImGui.Button($"■##Stop_{entry.Id}"))
         {
             Plugin.StopBackgroundMusic();
-        }
-    }
-
-    /// <summary>
-    /// Updates the checkbox states to synchronize with the selected preset's BGM entries.
-    /// </summary>
-    private void SynchronizeBgmStates()
-    {
-        if (Plugin.PresetManager.SelectedPreset?.SelectedEntries != null)
-        {
-            foreach (var bgm in ui.GetFilteredBgm(string.Empty, string.Empty, false))
-            {
-                var isSelected = Plugin.PresetManager.SelectedPreset.SelectedEntries.Contains(bgm.Id);
-                ui.SetBgmState(bgm.Id, isSelected);
-            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -52,6 +53,15 @@ public class PresetManager
     public BgmPreset? GetPreset(string name)
     {
         return config.Presets.FirstOrDefault(p => p.Name == name);
+    }
+
+    /// <summary>
+    /// Retrieves all presets that are currently enabled.
+    /// </summary>
+    /// <returns>A collection of enabled presets.</returns>
+    public IEnumerable<BgmPreset> GetEnabledPresets()
+    {
+        return config.Presets.Where(p => p.IsEnabled);
     }
 
     /// <summary>
