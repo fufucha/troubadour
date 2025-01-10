@@ -12,6 +12,14 @@ public class PresetManager
     private readonly Configuration config;
     private readonly Plugin plugin;
 
+    // JSON serializer settings for Import and Export
+    private JsonSerializerSettings JsonSerializerSettings => new JsonSerializerSettings
+    {
+        MissingMemberHandling = MissingMemberHandling.Error,
+        NullValueHandling = NullValueHandling.Include,
+        DefaultValueHandling = DefaultValueHandling.Populate
+    };
+
     public PresetManager(Configuration config, Plugin plugin)
     {
         this.config = config;
@@ -147,13 +155,7 @@ public class PresetManager
     {
         try
         {
-            var preset = JsonConvert.DeserializeObject<BgmPreset>(json, new JsonSerializerSettings
-            {
-                MissingMemberHandling = MissingMemberHandling.Error,
-                NullValueHandling = NullValueHandling.Include,
-                DefaultValueHandling = DefaultValueHandling.Populate
-            });
-
+            var preset = JsonConvert.DeserializeObject<BgmPreset>(json, JsonSerializerSettings);
             if (preset == null)
             {
                 return false;
@@ -184,7 +186,7 @@ public class PresetManager
     /// <returns>A JSON string representing the preset.</returns>
     public string ExportPreset(BgmPreset preset)
     {
-        return JsonConvert.SerializeObject(preset, Formatting.Indented);
+        return JsonConvert.SerializeObject(preset, Formatting.None, JsonSerializerSettings);
     }
 
     /// <summary>
