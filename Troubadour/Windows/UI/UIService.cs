@@ -46,11 +46,31 @@ public class UIService
     {
         return bgmList
             .Where(bgm =>
-                bgm.Duration > TimeSpan.Zero &&
-                (string.IsNullOrWhiteSpace(search) || bgm.English.Contains(search, StringComparison.OrdinalIgnoreCase)) &&
-                (string.IsNullOrWhiteSpace(category) || string.IsNullOrWhiteSpace(bgm.Extension) || string.Equals(bgm.Extension, category, StringComparison.OrdinalIgnoreCase)) &&
-                (!checkStates || (bgmStates.ContainsKey(bgm.Id) && bgmStates[bgm.Id])))
+                HasValidDuration(bgm) &&
+                MatchesSearch(bgm, search) &&
+                MatchesCategory(bgm, category) &&
+                MatchesState(bgm, checkStates))
             .ToList();
+
+        // checks if the duration is valid
+        bool HasValidDuration(BgmData bgm) => bgm.Duration > TimeSpan.Zero;
+
+        // checks if the BGM matches the search criteria
+        bool MatchesSearch(BgmData bgm, string search) =>
+            string.IsNullOrWhiteSpace(search) ||
+            bgm.English.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+            bgm.Id.ToString().Contains(search, StringComparison.OrdinalIgnoreCase);
+
+        // checks if the BGM matches the specified category
+        bool MatchesCategory(BgmData bgm, string category) =>
+            string.IsNullOrWhiteSpace(category) ||
+            string.IsNullOrWhiteSpace(bgm.Extension) ||
+            string.Equals(bgm.Extension, category, StringComparison.OrdinalIgnoreCase);
+
+        // checks if the BGM is checked
+        bool MatchesState(BgmData bgm, bool checkStates) =>
+            !checkStates ||
+            (bgmStates.ContainsKey(bgm.Id) && bgmStates[bgm.Id]);
     }
 
     /// <summary>
