@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Colors;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Troubadour.BGM;
 
 namespace Troubadour.Windows.UI.Tabs;
@@ -87,7 +87,7 @@ public class Main : TabBase
             }
 
             using var textureWrap = icon.GetWrapOrEmpty();
-            if (textureWrap == null || textureWrap.ImGuiHandle == nint.Zero)
+            if (textureWrap == null || textureWrap.Handle == nint.Zero)
             {
                 ImGui.Text($"Icon {iconID} not found.");
                 ImGui.Spacing();
@@ -98,7 +98,7 @@ public class Main : TabBase
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ImGui.GetStyle().Colors[(int)ImGuiCol.ButtonHovered]);
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, ImGui.GetStyle().Colors[(int)ImGuiCol.ButtonActive]);
 
-            if (ImGui.ImageButton(textureWrap.ImGuiHandle, new Vector2(40, 40), Vector2.Zero, Vector2.One))
+            if (ImGui.ImageButton(textureWrap.Handle, new Vector2(40, 40), Vector2.Zero, Vector2.One))
             {
                 selectedPanel = i;
             }

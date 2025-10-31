@@ -20,7 +20,7 @@ public class BgmManager
 
     private static readonly string BaseAddressSignature = "48 8B 05 ?? ?? ?? ?? 48 85 C0 74 51 83 78 08 0B";
     private static readonly string ResetBgmContextSignature = "E8 ?? ?? ?? ?? 88 9E ?? ?? ?? ?? 84 DB";
-    private static readonly string MusicManagerSignature = "48 8B 8F ?? ?? ?? ?? 39 70 20 0F 94 C2 45 33 C0";
+    private static readonly string MusicManagerSignature = "48 8B 8F ?? ?? ?? ?? 85 C0 0F 95 C2 E8 ?? ?? ?? ?? 48 8B 9F";
 
     public const ushort HIGHEST_PRIORITY = 0;
     public const ushort LOWEST_PRIORITY = 11;
