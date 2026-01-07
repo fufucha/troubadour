@@ -5,8 +5,8 @@
     "InternalName": "Troubadour",
     "Punchline": "Replace in-game BGM tracks with ease.",
     "Description": "Customize and manage in-game BGM presets.",
-    "AssemblyVersion": "0.0.7",
-    "TestingAssemblyVersion": "0.0.7",
+    "AssemblyVersion": "0.0.8",
+    "TestingAssemblyVersion": "0.0.8",
     "RepoUrl": "https://github.com/fufucha/troubadour",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 13,
@@ -18,8 +18,8 @@
         "presets",
         "troubadour"
     ],
-    "DownloadLinkInstall": "https://github.com/fufucha/troubadour/releases/download/v0.0.7/latest.zip",
-    "DownloadLinkTesting": "https://github.com/fufucha/troubadour/releases/download/v0.0.7/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/fufucha/troubadour/releases/download/v0.0.7/latest.zip"
+    "DownloadLinkInstall": "https://github.com/fufucha/troubadour/releases/download/v0.0.8/latest.zip",
+    "DownloadLinkTesting": "https://github.com/fufucha/troubadour/releases/download/v0.0.8/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/fufucha/troubadour/releases/download/v0.0.8/latest.zip"
   }
 ]
