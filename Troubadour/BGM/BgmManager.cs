@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
-using Dalamud.Game;
+using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 
 namespace Troubadour.BGM;

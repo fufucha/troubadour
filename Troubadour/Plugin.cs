@@ -1,8 +1,6 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Dalamud.Game;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
@@ -17,6 +15,8 @@ public sealed class Plugin : IDalamudPlugin
 {
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
+    [PluginService] internal static IClientState ClientState { get; set; } = null!;
+    [PluginService] internal static IObjectTable ObjectTable { get; set; } = null!;
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IFramework Framework { get; private set; } = null!;
     [PluginService] internal static ISigScanner SigScanner { get; private set; } = null!;
@@ -38,6 +38,8 @@ public sealed class Plugin : IDalamudPlugin
 
     public List<BgmData> BgmList { get; private set; }
     public Dictionary<ushort, bool> BgmStates { get; private set; }
+
+    private bool IsReady;
 
     public Plugin()
     {
@@ -74,9 +76,6 @@ public sealed class Plugin : IDalamudPlugin
             HelpMessage = "Customize and manage BGM presets with user-defined alternatives"
         });
 
-        // subscribe to framework updates
-        Framework.Update += OnFrameworkUpdate;
-
         try
         {
             // add or check the default preset
@@ -88,6 +87,11 @@ public sealed class Plugin : IDalamudPlugin
 
             // set the initial BGM
             currentBgmId = BgmManager.GetCurrentBgmId();
+
+            // subscribe to framework updates
+            Framework.Update += OnFrameworkUpdate;
+
+            IsReady = true;
         }
         catch (Exception ex)
         {
@@ -100,7 +104,6 @@ public sealed class Plugin : IDalamudPlugin
     /// </summary>
     /// <param name="bgmId">The ID of the BGM to play.</param>
     /// <param name="priority">The priority level for the BGM.</param>
-
     public unsafe void PlayBackgroundMusic(ushort bgmId, ushort priority = BgmManager.HIGHEST_PRIORITY)
     {
         try
@@ -175,6 +178,16 @@ public sealed class Plugin : IDalamudPlugin
     /// </summary>
     private void OnFrameworkUpdate(IFramework framework)
     {
+        if (!IsReady)
+            return;
+
+        if (!ClientState.IsLoggedIn)
+            return;
+
+        var player = ObjectTable.LocalPlayer;
+        if (player == null)
+            return;
+
         var newBgmId = BgmManager.GetCurrentBgmId();
         if (newBgmId != currentBgmId)
         {
