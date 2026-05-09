@@ -53,8 +53,7 @@ jobs:
       # Update repo.json
       - name: Update repo.json
         run: |
-          release_version=$(echo ${{ github.ref_name }} | sed 's/^v//')
-          assembly_version="$release_version.0"
+          assembly_version=$(sed -nE 's#.*"AssemblyVersion": "([^"]+)".*#\1#p' ./Troubadour/bin/Release/Troubadour/Troubadour.json)
           repo_url=$(echo ${{ github.server_url }}/${{ github.repository }} | sed 's/#/\\#/g')
 
           sed -i repo.json -E \
